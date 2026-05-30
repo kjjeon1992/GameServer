@@ -14,42 +14,23 @@ namespace Core.Network.Session
     /// </summary>
     public abstract class Session
     {
-<<<<<<< HEAD
-        protected Socket? _socket;
-        protected RingBuffer? _recvBuffer;
-        protected SendBuffer? _sendBuffer;
-        protected SocketAsyncEventArgs? _recvArgs;
-
-        private CancellationTokenSource? _cts;
-        protected Task? _recvTask;
-=======
         protected Socket? _socket;                  // 실제 통신에 사용되는 소켓
-        protected RingBuffer? _recvbuffer;          // 수신된 데이터를 임시로 저장하는 버퍼
+        protected RingBuffer? _recvBuffer;          // 수신된 데이터를 임시로 저장하는 버퍼
+        protected SendBuffer? _sendBuffer;          
         protected SocketAsyncEventArgs? _recvArgs;  // 소켓 작업에 쓸 인자 객체
-
+                                                    
         private CancellationTokenSource? _cts;      // 루프 종료 신호
-        protected Task? _receivetask;               // 수신 루프를 실행하는 Task
->>>>>>> d78d497 (5/30일 기준 cs파일 코멘트 추가)
+        protected Task? _recvTask;                  // 수신 루프를 실행하는 Task
 
         public virtual void Start(Socket socket)
         {
-            _socket = socket;
-<<<<<<< HEAD
-            _recvBuffer = new RingBuffer(1024 * 4);
+            _recvBuffer = new RingBuffer(1024 * 4);         // 4KB 버퍼로 초기화
             _sendBuffer = new SendBuffer();
             _recvArgs = new SocketAsyncEventArgs();
             _cts = new CancellationTokenSource();
 
-            OnConnected(_socket.RemoteEndPoint);
-            _recvTask = ReceiveLoopAsync(_cts.Token);
-=======
-            _recvbuffer = new RingBuffer(1024 * 4);         // 4KB 버퍼로 초기화
-            _recvArgs = new SocketAsyncEventArgs();
-            _cts = new CancellationTokenSource();
-
             OnConnected(_socket.RemoteEndPoint);            // 연결된 클라이언트의 EndPoint 정보를 전달
-            _receivetask = ReceiveLoopAsync(_cts.Token);
->>>>>>> d78d497 (5/30일 기준 cs파일 코멘트 추가)
+            _recvTask = ReceiveLoopAsync(_cts.Token);
         }
 
         private async Task ReceiveLoopAsync(CancellationToken token)
@@ -65,12 +46,9 @@ namespace Core.Network.Session
             {
                 while (!token.IsCancellationRequested)
                 {
-<<<<<<< HEAD
-                    var seg = _recvBuffer.WriteSegment;
-=======
                     // 쓸 수 있는 공간 확인
-                    var seg = _recvbuffer.WriteSegment;
->>>>>>> d78d497 (5/30일 기준 cs파일 코멘트 추가)
+                    var seg = _recvBuffer.WriteSegment;
+
                     if (seg.Count == 0)
                         break;
 
@@ -85,18 +63,12 @@ namespace Core.Network.Session
                         Disconnect();
                         break;
                     }
-<<<<<<< HEAD
+                     // write pointer 이동
                     _recvBuffer.OnWrite(bytesRead);
 
-                    int processed = OnRecv(_recvBuffer.ReadSegment);
-=======
-                    
-                    // write pointer 이동
-                    _recvbuffer.OnWrite(bytesRead);
-
                     // 파생 클래스에 넘기고 처리한 만큼 read pointer 이동
-                    int processed = OnRecv(_recvbuffer.ReadSegment);
->>>>>>> d78d497 (5/30일 기준 cs파일 코멘트 추가)
+                    int processed = OnRecv(_recvBuffer.ReadSegment);
+
                     if(processed < 0)
                     {
                         Disconnect();
@@ -156,7 +128,7 @@ namespace Core.Network.Session
                 return;
             }
 
-            if (_sendBuffer.OnSendCompleted())
+            if (_sendBuffer.OnSendCompleted())          // Queue에 남은 데이터가 있으면 Flush 재호출
                 FlushSend();
         }
 
