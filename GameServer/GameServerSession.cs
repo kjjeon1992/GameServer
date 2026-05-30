@@ -29,7 +29,10 @@ namespace GameServer
 
         protected override void OnRecvPacket(ArraySegment<byte> packet)
         {
+            string msg = Encoding.UTF8.GetString(packet.Array!, packet.Offset+2, packet.Count-2);
+            Console.WriteLine($"Received : {msg}");
 
+            SendAsync(packet);
         }
     }
 }

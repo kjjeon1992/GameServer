@@ -16,3 +16,4 @@ C:\PF\C#\GameServer\MainSolution\GameServer\obj\Debug\net9.0\refint\GameServer.d
 C:\PF\C#\GameServer\MainSolution\GameServer\obj\Debug\net9.0\GameServer.pdb
 C:\PF\C#\GameServer\MainSolution\GameServer\obj\Debug\net9.0\GameServer.genruntimeconfig.cache
 C:\PF\C#\GameServer\MainSolution\GameServer\obj\Debug\net9.0\ref\GameServer.dll
+C:\PF\C#\GameServer\MainSolution\GameServer\obj\Debug\net9.0\GameServer.sourcelink.json

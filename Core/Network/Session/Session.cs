@@ -12,28 +12,30 @@ namespace Core.Network.Session
     public abstract class Session
     {
         protected Socket? _socket;
-        protected RingBuffer? _recvbuffer;
+        protected RingBuffer? _recvBuffer;
+        protected SendBuffer? _sendBuffer;
         protected SocketAsyncEventArgs? _recvArgs;
 
         private CancellationTokenSource? _cts;
-        protected Task? _receivetask;
+        protected Task? _recvTask;
 
         public virtual void Start(Socket socket)
         {
             _socket = socket;
-            _recvbuffer = new RingBuffer(1024 * 4);
+            _recvBuffer = new RingBuffer(1024 * 4);
+            _sendBuffer = new SendBuffer();
             _recvArgs = new SocketAsyncEventArgs();
             _cts = new CancellationTokenSource();
 
             OnConnected(_socket.RemoteEndPoint);
-            _receivetask = ReceiveLoopAsync(_cts.Token);
+            _recvTask = ReceiveLoopAsync(_cts.Token);
         }
 
         private async Task ReceiveLoopAsync(CancellationToken token)
         {
             if (_socket == null)
                 return;
-            if (_recvbuffer == null)
+            if (_recvBuffer == null)
                 return;
             if (_recvArgs == null)
                 return;
@@ -42,7 +44,7 @@ namespace Core.Network.Session
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var seg = _recvbuffer.WriteSegment;
+                    var seg = _recvBuffer.WriteSegment;
                     if (seg.Count == 0)
                         break;
 
@@ -55,16 +57,16 @@ namespace Core.Network.Session
                         Disconnect();
                         break;
                     }
-                    _recvbuffer.OnWrite(bytesRead);
+                    _recvBuffer.OnWrite(bytesRead);
 
-                    int processed = OnRecv(_recvbuffer.ReadSegment);
+                    int processed = OnRecv(_recvBuffer.ReadSegment);
                     if(processed < 0)
                     {
                         Disconnect();
                         return;
                     }
-                    _recvbuffer.OnRead(processed);
-                    _recvbuffer.Clean();
+                    _recvBuffer.OnRead(processed);
+                    _recvBuffer.Clean();
                 }
             }
             catch (OperationCanceledException)
@@ -80,8 +82,21 @@ namespace Core.Network.Session
             }
         }
 
-        protected async Task SendAsync()
-        { }
+        public void SendAsync(ArraySegment<byte> segment)
+        {
+            _sendBuffer?.Enqueue(segment);
+            FlushSend();
+        }
+
+        private void FlushSend()
+        {
+            var pendingList = _sendBuffer?.GetPendingList();
+            if (pendingList == null)
+                return;
+
+            _socket?.SendAsync(pendingList, SocketFlags.None).ContinueWith(OnSendCompleted);
+        }
+        
 
         protected virtual void Disconnect()
         {
@@ -99,6 +114,23 @@ namespace Core.Network.Session
             }
             catch { }
         }
+
+        private void OnSendCompleted(Task<int> task)
+        {
+            if(_sendBuffer == null)
+                return;
+
+            if (task.IsFaulted)
+            {
+                Console.WriteLine($"Send Error : {task.Exception}");
+                Disconnect();
+                return;
+            }
+
+            if (_sendBuffer.OnSendCompleted())
+                FlushSend();
+        }
+
         protected abstract void OnConnected(EndPoint? endPoint);
         protected abstract int OnRecv(ArraySegment<byte> buffer);
         protected abstract void OnDisconnected(EndPoint? endPoint);
