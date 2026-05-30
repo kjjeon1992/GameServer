@@ -1,0 +1,11 @@
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.AssemblyInfoInputs.cache
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.AssemblyInfo.cs
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.csproj.CoreCompileInputs.cache
+C:\PF\C#\GameServer\MainSolution\Core\bin\Debug\net9.0\Core.deps.json
+C:\PF\C#\GameServer\MainSolution\Core\bin\Debug\net9.0\Core.dll
+C:\PF\C#\GameServer\MainSolution\Core\bin\Debug\net9.0\Core.pdb
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.dll
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\refint\Core.dll
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\Core.pdb
+C:\PF\C#\GameServer\MainSolution\Core\obj\Debug\net9.0\ref\Core.dll
