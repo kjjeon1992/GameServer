@@ -8,6 +8,9 @@ using System.Net;
 
 namespace Core.Network.Transport
 {
+    /// <summary>
+    /// 서버 소켓을 열고 클라이언트 연결 요청을 기다리고 수락하는 역할.
+    /// </summary>
     public class Listener
     {
         private Socket? _listener;

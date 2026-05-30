@@ -18,7 +18,7 @@ namespace GameServer
         protected override void OnConnected(EndPoint? endPoint)
         {
             Console.WriteLine($"Connected : {endPoint}");
-            GameServerSessionManager.Instance.Add(this, id=> SessionId = id);
+            GameServerSessionManager.Instance.Add(this, id=> SessionId = id);   // onIdAssinged(id)가 호출될 때 id를 받아서 SessionId에 저장
         }
 
         protected override void OnDisconnected(EndPoint? endPoint)

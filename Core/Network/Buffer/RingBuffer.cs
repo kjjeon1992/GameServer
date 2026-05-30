@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 
 namespace Core.Network.Buffer
 {
+    /// <summary>
+    /// 배열 하나를 원형으로 재사용하는 버퍼. write/read pointer를 통해 메모리 낭비를 줄이며 데이터를 관리.
+    /// </summary>
     public class RingBuffer
     {
-        private byte[] _buffer;
-        private int _readPos;
-        private int _writePos;
-        private int _capacity;
+
+        private byte[] _buffer;     // 실제 데이터를 저장하는 배열
+        private int _readPos;       // 다음에 읽을 위치를 가르키는 포인터
+        private int _writePos;      // 다음에 쓸 위치를 가르키는 포인터
+        private int _capacity;      // 버퍼의 총 크기, [ Sentinel Slot을 위해 실제 사용 가능한 크기는 _capacity - 1 ]
+
 
         public RingBuffer(int capacity)
         {
@@ -25,9 +30,9 @@ namespace Core.Network.Buffer
             get
             {
                 if (_writePos >= _readPos)
-                    return _writePos - _readPos;
+                    return _writePos - _readPos;            // 일반적인 경우 
 
-                return _capacity - _readPos + _writePos;
+                return _capacity - _readPos + _writePos;    // write pointer가 read pointer를 넘어간 경우 (원형으로 돌아온 경우)
             }
         }
 
@@ -48,7 +53,7 @@ namespace Core.Network.Buffer
                     int rightSpace = _capacity - _writePos;
 
                     if (_readPos == 0)
-                        rightSpace -= 1;
+                        rightSpace -= 1; // Sentinel Slot을 위해 마지막 공간 하나는 항상 비워둬야 함
 
                     return new ArraySegment<byte>(_buffer,_writePos, rightSpace);
                 }
@@ -77,7 +82,7 @@ namespace Core.Network.Buffer
 
         public void OnWrite(int size)
         {
-            _writePos = (_writePos + size) % _capacity;
+            _writePos = (_writePos + size) % _capacity; // 끝 도달시 처음으로 돌아가도록 원형으로 계산
         }
 
         public void OnRead(int size)

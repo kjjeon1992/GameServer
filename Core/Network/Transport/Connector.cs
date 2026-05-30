@@ -9,6 +9,9 @@ using System.Net;
 
 namespace Core.Network.Transport
 {
+    /// <summary>
+    /// 서버에 연결 요청을 보내고 연결이 성공하면 세션을 시작하는 역할.
+    /// </summary>
     public class Connector
     {
         private Func<Session.Session>? _sessionFactory;

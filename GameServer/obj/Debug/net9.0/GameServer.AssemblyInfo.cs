@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GameServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+227f0c2f168a4aef319f0c1d9799a9361fda0dd4")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e18c8c05d2d71966b9c2cc44a6e4a3699d7972f")]
+>>>>>>> d78d497 (5/30일 기준 cs파일 코멘트 추가)
 [assembly: System.Reflection.AssemblyProductAttribute("GameServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GameServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
