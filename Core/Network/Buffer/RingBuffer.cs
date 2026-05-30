@@ -20,9 +20,6 @@ namespace Core.Network.Buffer
             _capacity = capacity;
         }
 
-        /// <summary>
-        /// 읽기 가능한 공간 , 아직 처리가 남아있는 데이터
-        /// </summary>
         public int DataSize 
         {
             get
@@ -33,9 +30,7 @@ namespace Core.Network.Buffer
                 return _capacity - _readPos + _writePos;
             }
         }
-        /// <summary>
-        /// 쓰기 가능한 공간
-        /// </summary>
+
         public int FreeSize 
         { 
             get 
@@ -44,10 +39,6 @@ namespace Core.Network.Buffer
             } 
         }
 
-
-        /// <summary>
-        /// 현재 write 가능한 연속 구간
-        /// </summary>
         public ArraySegment<byte> WriteSegment
         {
             get
@@ -68,9 +59,6 @@ namespace Core.Network.Buffer
             }
         }
 
-        /// <summary>
-        /// 현재 read 가능한 구간
-        /// </summary>
         public ArraySegment<byte> ReadSegment
         {
             get 
